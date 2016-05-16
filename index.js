@@ -276,9 +276,9 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
       })
       .then((args) => {
         let query = `BEGIN ${opts.name}(`;
-        query += Object.keys(args).map(key => `:${key}`).join(', ');
-        query += `); END;`;
         const qargs = lodash.assign(opts.args, args)
+        query += Object.keys(qargs).map(key => `:${key}`).join(', ');
+        query += `); END;`;
         this.log(query);
         this.log(qargs);
         return new Promise((resolve, reject) => {
