@@ -1,0 +1,27 @@
+{
+  "name": "sqlmoses-oracle",
+  "version": "1.0.0",
+  "description": "A query manager for OracleDB",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fritzy/seaquell.git"
+  },
+  "dependencies": {
+    "oracledb": "^1.8.0",
+    "wadofgum": "^5.1.0",
+    "wadofgum-keymap": "^0.1.1",
+    "wadofgum-process": "^0.2.0",
+    "wadofgum-validation": "^2.0.0"
+  },
+  "devDependencies": {
+    "code": "^2.1.0",
+    "getconfig": "^2.2.0",
+    "lab": "^8.0.1"
+  },
+  "scripts": {
+    "test": "lab -a code -c -v"
+  },
+  "author": "Nathanael C. Fritz",
+  "license": "MIT"
+}
