@@ -75,6 +75,37 @@ new SQLMoses.Model({
 
 ## Methods
 
+### select
+
+Arguments:
+
+```
+opts: {
+  opts.where: {
+    // column: value
+  },
+  opts.page: {
+    offset: 0
+    limit: 10
+  },
+  order: ['column']
+```
+
+### update
+
+Arguments:
+```
+args (incoming object)
+where (where AND values object)
+```
+
+### delete
+
+Arguments
+```
+where
+```
+
 ### mapProcedure
 
 Creates a method that runs a Stored Procedure, returning a Promise with model instances of the resulting rows.
@@ -83,9 +114,8 @@ __mapProcedure__(opts)
 
 ```
 opts: {
-  name: (String) name of method,
-  input: args
-  output: (node-oracledb output object) see [oracledb output binding](https://github.com/oracle/node-oracledb/blob/master/doc/api.md#outbind)
+  name: (String) name of method and stored procedure,
+  args: (node-oracledb output object) see [oracledb output binding](https://github.com/oracle/node-oracledb/blob/master/doc/api.md#outbind)
 }
 ```
 
