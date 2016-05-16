@@ -17,8 +17,8 @@ const Test = new SQLMoses.Model({
   table: 'HELP',
   keyMap: {
     'topic': 'TOPIC',
-    'seq': 'seq',
-    'info': 'info'
+    'seq': 'SEQ',
+    'info': 'INFO'
   }
 });
 
@@ -32,5 +32,15 @@ lab.experiment('testing functions', () => {
     .catch((err) => {
       console.log(err.stack);
     });
+  });
+
+  lab.test('insert', (done) => {
+    Test.insert({topic: 'cheese', seq: 1, 'info': 'weee'})
+    .then((results) => {
+      done();
+    })
+    .catch((err) => {
+      console.log(err.stack);
+    })
   });
 });

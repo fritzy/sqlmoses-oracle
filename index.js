@@ -36,6 +36,9 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
   }
 
   _processResults(results) {
+    if (!results.rows) {
+      return [];
+    }
     results = results.rows.map(result => this.validateAndProcess(result, new Set(['fromDB'])));
     return Promise.all(results);
   }
@@ -50,10 +53,8 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
     if (typeof tags === 'string') tags = [tags];
     const tagSet = new Set(tags);
     if (tagSet.has('toDB')) {
-      console.log('keymap')
       obj = this.mapTo(obj);
     } else if (tagSet.has('fromDB')) {
-      console.log('keymap')
       obj = this.mapFrom(obj);
     }
     if (this.schema) {
@@ -98,14 +99,18 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
 
   insert (args, out) {
 
-    args = this._processArgs(args);
+    let db;
     return this.getDB()
-    .then((db) => {
+    .then((dbi) => {
+      db = dbi;
+      return this._processArgs(args)
+    })
+    .then((args) => {
+
 
       return new Promise((resolve, reject) => {
-
         const inargs = {};
-        query += `INSERT INTO "${this.table}" (`;
+        let query = `INSERT INTO "${this.table}" (`;
         query += Object.keys(args).map(key => `"${key}"`)
         .join(', ');
         query += ') VALUES (';
@@ -113,6 +118,7 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
           inargs[key] = args[key];
           return `:${key}`;
         }).join(', ');
+        query += ")";
         if (out) {
           const outkeys = Object.keys(out);
           query += ' RETURNING ';
