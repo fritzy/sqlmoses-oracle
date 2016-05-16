@@ -233,10 +233,17 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
   }
 
   mapProcedure (opts) {
-    this[opts.name] = (args, out) => {
-      args = this._processArgs(args);
+    this[opts.name] = (args) => {
+      let db;
       return this.getDB()
-      .then((db) => {
+      .then((dbi) => {
+        db = dbi;
+        return this._processArgs(args);
+      })
+      .then((args) => {
+        let query = `BEGIN ${opts.name}(`;
+        query += Object.keys(args).map(key => `:${key}`).join(', ');
+        query += `); END;`;
         return new Promise((resolve, reject) => {
           db.execute(query, args, (err, result) => {
             if (err) {
