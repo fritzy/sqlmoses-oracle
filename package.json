@@ -8,6 +8,7 @@
     "url": "git@github.com:fritzy/seaquell.git"
   },
   "dependencies": {
+    "lodash": "^4.12.0",
     "oracledb": "https://github.com/fritzy/node-oracledb.git",
     "wadofgum": "^5.1.0",
     "wadofgum-keymap": "^0.1.1",

@@ -4,6 +4,7 @@ const wadofgum = require('wadofgum');
 const wadofgumValidation = require('wadofgum-validation');
 const wadofgumProcess = require('wadofgum-process');
 const wadofgumKeyMap = require('wadofgum-keymap');
+const lodash = require('lodash');
 
 const oracledb = require('oracledb');
 oracledb.outFormat = oracledb.OBJECT;
@@ -277,9 +278,7 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
         query += Object.keys(args).map(key => `:${key}`).join(', ');
         query += `); END;`;
         return new Promise((resolve, reject) => {
-          this.log(query);
-          this.log(args);
-          db.execute(query, args, (err, result) => {
+          db.execute(query, lodash.assign(opts.args, args), (err, result) => {
             if (err) {
               return reject(err);
             }
