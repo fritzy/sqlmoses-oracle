@@ -40,10 +40,10 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
   }
 
   _processResults(results) {
-    if (!results.rows) {
+    if (!results.rows && !results.outBinds) {
       return [];
     }
-    results = results.rows.map(result => this.validateAndProcess(result, new Set(['fromDB'])));
+    results = (results.rows || results.outBinds).map(result => this.validateAndProcess(result, new Set(['fromDB'])));
     return Promise.all(results);
   }
   
