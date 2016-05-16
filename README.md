@@ -48,6 +48,10 @@ Test.select()
 [![npm i sqlmoses](https://nodei.co/npm/sqlmoses.png)](https://npmjs.org/packages/sqlmoses)
 
 
+### Connecting
+
+Require the module and call the module as a function, including the connection attrs object specified in [oracle connection handling](https://github.com/oracle/node-oracledb/blob/master/doc/api.md#connectionhandling).
+
 ## Creating a Model 
 
 ```js
