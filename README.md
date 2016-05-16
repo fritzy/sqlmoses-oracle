@@ -2,7 +2,7 @@
 
 ![Seagull Waterbender Moses](https://cldup.com/xBEt5glGHQ.png)
 
-[![npm version](https://badge.fury.io/js/sqlmoses.svg)](http://badge.fury.io/js/sqlmoses)
+[![npm version](https://badge.fury.io/js/sqlmoses-oracle.svg)](http://badge.fury.io/js/sqlmoses-oracle)
 
 A [pure function](http://www.nicoespeon.com/en/2015/01/pure-functions-javascript/) model class for Oracle DB.
 
@@ -45,7 +45,7 @@ Test.select()
 
 ## Install
 
-[![npm i sqlmoses](https://nodei.co/npm/sqlmoses.png)](https://npmjs.org/packages/sqlmoses)
+[![npm i sqlmoses](https://nodei.co/npm/sqlmoses-oracle.png)](https://npmjs.org/packages/sqlmoses-oracle)
 
 
 ### Connecting
