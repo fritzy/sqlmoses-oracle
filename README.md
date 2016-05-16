@@ -91,6 +91,17 @@ opts: {
   order: ['column']
 ```
 
+### insert
+
+Arguments:
+
+```
+args: {}
+output: see oracledb docs for format
+```
+
+For output argument format see: [oracledb output binding](https://github.com/oracle/node-oracledb/blob/master/doc/api.md#outbind)
+
 ### update
 
 Arguments:
@@ -112,12 +123,16 @@ Creates a method that runs a Stored Procedure, returning a Promise with model in
 
 __mapProcedure__(opts)
 
+
 ```
 opts: {
   name: (String) name of method and stored procedure,
   args: (node-oracledb output object) see [oracledb output binding](https://github.com/oracle/node-oracledb/blob/master/doc/api.md#outbind)
 }
 ```
+
+For output argument format see: [oracledb output binding](https://github.com/oracle/node-oracledb/blob/master/doc/api.md#outbind)
+
 
 __return__: Promise awaiting setup.
 
