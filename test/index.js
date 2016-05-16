@@ -24,9 +24,8 @@ const Test = new SQLMoses.Model({
 
 lab.experiment('testing functions', () => {
   lab.test('select', (done) => {
-    Test.select()
+    Test.select({order: [{seq: 'DESC'}]})
     .then((results) => {
-      console.log(results);
       done();
     })
     .catch((err) => {

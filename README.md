@@ -52,7 +52,7 @@ Test.select()
 
 Require the module and call the module as a function, including the connection attrs object specified in [oracle connection handling](https://github.com/oracle/node-oracledb/blob/master/doc/api.md#connectionhandling).
 
-## Creating a Model 
+## Creating a Model
 
 ```js
 new SQLMoses.Model({
@@ -92,7 +92,7 @@ opts: {
     offset: 0
     limit: 10
   },
-  order: ['column']
+  order: [{'column': 'DESC'}, {'column2': 'ASC'}]
 ```
 
 ### insert
