@@ -278,8 +278,11 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
         let query = `BEGIN ${opts.name}(`;
         query += Object.keys(args).map(key => `:${key}`).join(', ');
         query += `); END;`;
+        const qargs = lodash.assign(opts.args, args)
+        this.log(query);
+        this.log(qargs);
         return new Promise((resolve, reject) => {
-          db.execute(query, lodash.assign(opts.args, args), {autoCommit: this.autoCommit}, (err, result) => {
+          db.execute(query, qargs, {autoCommit: this.autoCommit}, (err, result) => {
             if (err) {
               return reject(err);
             }
