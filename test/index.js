@@ -41,6 +41,27 @@ lab.experiment('testing functions', () => {
     })
     .catch((err) => {
       console.log(err.stack);
+    });
+  });
+
+  lab.test('update', (done) => {
+    Test.update({topic: 'cheese2'}, {topic: 'cheese'})
+    .then((results) => {
+      done();
+    })
+    .catch((err) => {
+      console.log(err.stack);
+    });
+  });
+  
+  lab.test('delete', (done) => {
+    Test.delete({topic: 'cheese2'})
+    .then((results) => {
+      done();
+    })
+    .catch((err) => {
+      console.log(err.stack);
     })
   });
+
 });

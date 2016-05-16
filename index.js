@@ -107,7 +107,6 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
     })
     .then((args) => {
 
-
       return new Promise((resolve, reject) => {
         const inargs = {};
         let query = `INSERT INTO "${this.table}" (`;
@@ -141,20 +140,33 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
   }
 
   update (args, where) {
-    args = this._processArgs(args);
-    where = this._processArgs(where);
+    let db;
     return this.getDB()
-    .then((db) => {
+    .then((dbi) => {
+      db = dbi;
+      return this._processArgs(args);
+    })
+    .then((argsi) => {
+      args = argsi;
+      return this._processArgs(where);
+    })
+    .then((wherei) => {
+      where = wherei;
       return new Promise((resolve, reject) => {
         const inargs = {};
-        query += `UPDATE "${this.table}" (`;
-        query += Object.keys(args).map(key => `"${key}"`)
-        .join(', ');
-        query += ') VALUES (';
+        let query = `UPDATE "${this.table}" SET `;
         query += Object.keys(args).map((key) => {
           inargs[key] = args[key];
-          return `:${key}`;
-        }).join(', ');
+          return `"${key}" = :${key}`
+        })
+        .join(', ');
+        if (where) {
+          query += ' WHERE ';
+          query += Object.keys(where).map((key) => {
+            inargs[`c_${key}`] = where[key];
+            return `"${key}" = :c_${key}`;
+          }).join(' AND ');
+        }
         db.execute(query, inargs, (err, result) => {
           if (err) {
             return reject(err);
@@ -166,9 +178,13 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
   }
 
   delete (where) {
-    where = this._processArgs(where);
+    let db;
     return this.getDB()
-    .then((db) => {
+    .then((dbi) => {
+      db = dbi;
+      return this._processArgs(where);
+    })
+    .then((where) => {
       return new Promise((resolve, reject) => {
         let query = `DELETE FROM "${this.table || this.view}"`;
         const args = [];
