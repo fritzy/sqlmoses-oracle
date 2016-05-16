@@ -25,6 +25,7 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
     super(opts);
     this.map = this.map || {};
     oracledb.autoCommit = !!opts.autoCommit;
+    this.autoCommit = !!opts.autoCommit;
 
     if (this.name) {
       cached_models[this.name] = this;
@@ -108,7 +109,7 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
         }
         this.log(query);
         this.log(args);
-        db.execute(query, args, (err, result) => {
+        db.execute(query, args, {autoCommit: this.autoCommit}, (err, result) => {
           if (err) {
             return reject(err);
           }
@@ -151,7 +152,7 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
         }
         this.log(query);
         this.log(args);
-        db.execute(query, inargs, (err, result) => {
+        db.execute(query, inargs, {autoCommit: this.autoCommit}, (err, result) => {
 
           if (err) {
             return reject(err);
@@ -192,7 +193,7 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
         }
         this.log(query);
         this.log(inargs);
-        db.execute(query, inargs, (err, result) => {
+        db.execute(query, inargs, {autoCommit: this.autoCommit}, (err, result) => {
           if (err) {
             return reject(err);
           }
@@ -222,7 +223,7 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
         }
         this.log(query);
         this.log(args);
-        db.execute(query, args, (err, result) => {
+        db.execute(query, args, {autoCommit: this.autoCommit}, (err, result) => {
           if (err) {
             return reject(err);
           }
@@ -254,7 +255,7 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
         return new Promise((resolve, reject) => {
           this.log(query);
           this.log(args);
-          db.execute(query, args, (err, result) => {
+          db.execute(query, args, {autoCommit: this.autoCommit}, (err, result) => {
             if (err) {
               return reject(err);
             }
@@ -278,7 +279,7 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
         query += Object.keys(args).map(key => `:${key}`).join(', ');
         query += `); END;`;
         return new Promise((resolve, reject) => {
-          db.execute(query, lodash.assign(opts.args, args), (err, result) => {
+          db.execute(query, lodash.assign(opts.args, args), {autoCommit: this.autoCommit}, (err, result) => {
             if (err) {
               return reject(err);
             }

@@ -19,7 +19,8 @@ const Test = new SQLMoses.Model({
     'topic': 'TOPIC',
     'seq': 'SEQ',
     'info': 'INFO'
-  }
+  },
+  autoCommit: true
 });
 
 lab.experiment('testing functions', () => {
