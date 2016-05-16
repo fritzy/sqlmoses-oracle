@@ -5,7 +5,7 @@ oracledb.getConnection(
 {
   user          : "system",
   password      : "oracle",
-  connectString : "192.168.1.203/orcl12c"
+  connectString : "192.168.43.161/orcl12c"
 },
 function(err, connection)
 {
