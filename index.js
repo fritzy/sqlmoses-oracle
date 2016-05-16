@@ -29,6 +29,8 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
       cached_models[this.name] = this;
     }
 
+    this.log = opts.log || console.log;
+
     this.table = opts.table || false;
     this.view = opts.view || false;
     this._preparedStatements = {};
@@ -103,7 +105,8 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
           query += ' ORDER BY ';
           query += opts.order.map(order => `"${Object.keys(order)[0]}" ${order[Object.keys(order)[0]] === 'DESC' ? 'DESC' : '' }`).join(', ');
         }
-        console.log(query)
+        this.log(query);
+        this.log(args);
         db.execute(query, args, (err, result) => {
           if (err) {
             return reject(err);
@@ -145,6 +148,8 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
             inargs[key] = out[key];
           }
         }
+        this.log(query);
+        this.log(args);
         db.execute(query, inargs, (err, result) => {
 
           if (err) {
@@ -184,6 +189,8 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
             return `"${key}" = :c_${key}`;
           }).join(' AND ');
         }
+        this.log(query);
+        this.log(inargs);
         db.execute(query, inargs, (err, result) => {
           if (err) {
             return reject(err);
@@ -212,6 +219,8 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
             return `"${key}" = :${key}`;
           }).join(' AND ')
         }
+        this.log(query);
+        this.log(args);
         db.execute(query, args, (err, result) => {
           if (err) {
             return reject(err);
@@ -234,10 +243,16 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
 
   mapQuery (opts) {
     this[opts.name] = (args, out) => {
-      args = this._processArgs(args);
+      let db;
       return this.getDB()
-      .then((db) => {
+      .then((dbi) => {
+        db = dbi;
+        return this._processArgs(args);
+      })
+      .then((args) => {
         return new Promise((resolve, reject) => {
+          this.log(query);
+          this.log(args);
           db.execute(query, args, (err, result) => {
             if (err) {
               return reject(err);
@@ -262,6 +277,8 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
         query += Object.keys(args).map(key => `:${key}`).join(', ');
         query += `); END;`;
         return new Promise((resolve, reject) => {
+          this.log(query);
+          this.log(args);
           db.execute(query, args, (err, result) => {
             if (err) {
               return reject(err);
