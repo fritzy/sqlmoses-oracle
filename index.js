@@ -46,13 +46,13 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
     results = (results.rows || results.outBinds).map(result => this.validateAndProcess(result, new Set(['fromDB'])));
     return Promise.all(results);
   }
-  
+
   _processArgs(args) {
     if (!args) return;
     args = this.validateAndProcess(args, new Set(['toDB']));
     return args;
   }
-  
+
   validateAndProcess(obj, tags) {
     tags = tags || [];
     if (typeof tags === 'string') tags = [tags];
@@ -80,18 +80,23 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
       db = dbi;
       return this._processArgs(opts.where)
     })
-    .then((where) => {
+   .then((where) => {
       opts.where = where;
-      const result = opts.order.map(order => this._processArgs(order));
-      return Promise.all(result);
+
+      if(opts.order){
+        const result = opts.order.map(order => this._processArgs(order));
+        Promise.all(result);
+      }
+      else{
+         return where;
+      }
     })
-    .then((order) => {
-      opts.order = order;
+    .then((result) => {
+     // opts.order = order;
       return new Promise((resolve, reject) => {
         let query = `SELECT * FROM "${this.table || this.view}"`;
         const args = [];
         if (opts.where) {
-          opts.where = this._processArgs(opts.where);
           query += ' WHERE ';
           query += Object.keys(opts.where).map((key) => {
             args.push(opts.where[key]);
@@ -107,8 +112,6 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
           query += ' ORDER BY ';
           query += opts.order.map(order => `"${Object.keys(order)[0]}" ${order[Object.keys(order)[0]] === 'DESC' ? 'DESC' : '' }`).join(', ');
         }
-        this.log(query);
-        this.log(args);
         db.execute(query, args, {autoCommit: this.autoCommit}, (err, result) => {
           if (err) {
             return reject(err);
