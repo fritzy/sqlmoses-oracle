@@ -35,7 +35,7 @@ lab.experiment('testing functions', () => {
   });
 
   lab.test('insert', (done) => {
-    Test.insert({topic: 'cheese', seq: 1, 'info': 'weee'})
+    Test.insert({topic: 'cheese', seq: 1, 'info': 'weee'}, {SEQ: 1})
     .then((results) => {
       done();
     })

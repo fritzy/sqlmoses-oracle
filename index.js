@@ -43,7 +43,12 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
     if (!results.rows && !results.outBinds) {
       return [];
     }
-    results = (results.rows || results.outBinds).map(result => this.validateAndProcess(result, new Set(['fromDB'])));
+    this.log(results);
+    if (results.outBinds) {
+      results = [this.validateAndProcess(results.outBinds, new Set('fromDB'))];
+    } else {
+      results = (results.rows || results.outBinds).map(result => this.validateAndProcess(result, new Set(['fromDB'])));
+    }
     return Promise.all(results);
   }
 
@@ -112,6 +117,7 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
           query += ' ORDER BY ';
           query += opts.order.map(order => `"${Object.keys(order)[0]}" ${order[Object.keys(order)[0]] === 'DESC' ? 'DESC' : '' }`).join(', ');
         }
+        this.log(query)
         db.execute(query, args, {autoCommit: this.autoCommit}, (err, result) => {
           if (err) {
             return reject(err);
@@ -143,6 +149,7 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
           return `:${key}`;
         }).join(', ');
         query += ")";
+        /*
         if (out) {
           const outkeys = Object.keys(out);
           query += ' RETURNING ';
@@ -153,6 +160,7 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
             inargs[key] = out[key];
           }
         }
+        */
         this.log(query);
         this.log(args);
         db.execute(query, inargs, {autoCommit: this.autoCommit}, (err, result) => {
