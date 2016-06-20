@@ -5,11 +5,12 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:fritzy/seaquell.git"
+    "url": "git@github.com:fritzy/sqlmoses-oracle.git"
   },
+  "homepage": "https://github.com/fritzy/sqlmoses-oracle",
   "dependencies": {
     "lodash": "^4.12.0",
-    "oracledb": "https://github.com/fritzy/node-oracledb.git",
+    "oracledb": "^1.9.3",
     "wadofgum": "^5.1.0",
     "wadofgum-keymap": "^0.2.0",
     "wadofgum-process": "^0.2.0",
