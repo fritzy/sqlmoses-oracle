@@ -11,7 +11,7 @@
     "lodash": "^4.12.0",
     "oracledb": "https://github.com/fritzy/node-oracledb.git",
     "wadofgum": "^5.1.0",
-    "wadofgum-keymap": "^0.1.1",
+    "wadofgum-keymap": "^0.2.0",
     "wadofgum-process": "^0.2.0",
     "wadofgum-validation": "^2.0.0"
   },

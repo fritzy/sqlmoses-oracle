@@ -101,7 +101,7 @@ Arguments:
 
 ```
 args: {}
-output: see oracledb docs for format
+output: {field: SQLMoses.oracledb.[STRING or NUMBER or DATE]}
 ```
 
 For output argument format see: [oracledb output binding](https://github.com/oracle/node-oracledb/blob/master/doc/api.md#outbind)

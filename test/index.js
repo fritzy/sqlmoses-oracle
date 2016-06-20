@@ -20,7 +20,8 @@ const Test = new SQLMoses.Model({
     'seq': 'SEQ',
     'info': 'INFO'
   },
-  autoCommit: true
+  autoCommit: true,
+  log: function () {}
 });
 
 lab.experiment('testing functions', () => {
@@ -35,8 +36,9 @@ lab.experiment('testing functions', () => {
   });
 
   lab.test('insert', (done) => {
-    Test.insert({topic: 'cheese', seq: 1, 'info': 'weee'}, {SEQ: 1})
+    Test.insert({topic: 'cheese', 'info': 'weee', seq: 1}, {seq: SQLMoses.oracledb.NUMBER})
     .then((results) => {
+      expect(results[0].seq).to.equal(1);
       done();
     })
     .catch((err) => {

@@ -45,9 +45,9 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
     }
     this.log(results);
     if (results.outBinds) {
-      results = [this.validateAndProcess(results.outBinds, new Set('fromDB'))];
+      results = [this.validateAndProcess(results.outBinds, new Set(['fromDB']))];
     } else {
-      results = (results.rows || results.outBinds).map(result => this.validateAndProcess(result, new Set(['fromDB'])));
+      results = results.rows.map(result => this.validateAndProcess(result, new Set(['fromDB'])));
     }
     return Promise.all(results);
   }
@@ -60,6 +60,20 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
 
   validateAndProcess(obj, tags) {
     tags = tags || [];
+
+    obj = (function (obj) {
+      const newobj = {};
+      Object.keys(obj).forEach((key) => {
+        const idx = key.indexOf('__out');
+        if (idx !== -1) {
+          newobj[key.substring(0, idx)] = obj[key][0];
+        } else {
+          newobj[key] = obj[key];
+        }
+      });
+      return newobj;
+    })(obj);
+
     if (typeof tags === 'string') tags = [tags];
     const tagSet = new Set(tags);
     if (tagSet.has('toDB')) {
@@ -90,14 +104,14 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
 
       if(opts.order){
         const result = opts.order.map(order => this._processArgs(order));
-        Promise.all(result);
+        return Promise.all(result);
       }
       else{
          return where;
       }
     })
-    .then((result) => {
-     // opts.order = order;
+    .then((order) => {
+      opts.order = order;
       return new Promise((resolve, reject) => {
         let query = `SELECT * FROM "${this.table || this.view}"`;
         const args = [];
@@ -134,35 +148,35 @@ class Model extends wadofgum.mixin(wadofgumValidation, wadofgumProcess, wadofgum
     return this.getDB()
     .then((dbi) => {
       db = dbi;
-      return this._processArgs(args)
+      out = this.mapTo(out);
+      return Promise.all([this._processArgs(args), this._processArgs(out)]);
     })
-    .then((args) => {
+    .then((proms) => {
+      args = proms[0];
+      out = proms[1];
 
       return new Promise((resolve, reject) => {
         const inargs = {};
+        const outkeys = Object.keys(out);
+        outkeys.forEach((key) => {
+          inargs[key + '__out'] = {type: out[key], dir: oracledb.BIND_OUT};
+        });
+        
         let query = `INSERT INTO "${this.table}" (`;
         query += Object.keys(args).map(key => `"${key}"`)
         .join(', ');
         query += ') VALUES (';
         query += Object.keys(args).map((key) => {
           inargs[key] = args[key];
+          if (typeof args[key] === 'object' && (args[key].dir === oracledb.BIND_OUT || args[key].dir === oracledb.BIND_INOUT)) {
+            outkeys.push(key);
+          }
           return `:${key}`;
         }).join(', ');
         query += ")";
-        /*
         if (out) {
-          const outkeys = Object.keys(out);
-          query += ' RETURNING ';
-          query += outkeys.map(key => `"${key}"`).join(', ');
-          query += ' INTO ';
-          query += outkeys.map(key => `:${key}`).join(', ');
-          for (const key of outkeys) {
-            inargs[key] = out[key];
-          }
+          query += ` RETURNING ${outkeys.join(', ')} INTO ${outkeys.map(key => ':' + key + '__out').join(', ')}`;
         }
-        */
-        this.log(query);
-        this.log(args);
         db.execute(query, inargs, {autoCommit: this.autoCommit}, (err, result) => {
 
           if (err) {
