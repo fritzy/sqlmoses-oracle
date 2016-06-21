@@ -359,6 +359,7 @@ module.exports = (oracle_config) => {
     getModel: function getModel(name) {
       return cached_models[name];
     },
-    oracledb
+    oracledb,
+    utils: require('./utils')
   };
 }
